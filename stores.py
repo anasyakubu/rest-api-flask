@@ -2,11 +2,21 @@
 from flask import Blueprint, request, jsonify
 from bson import ObjectId
 import pymongo
+from dotenv import load_dotenv
+import os
 
+
+# Load variables from .env into environment
+load_dotenv()
+
+# Now you can access your MONGO_URI
+MONGO_URI = os.getenv("MONGO_URI")
+
+# Initialize the Blueprint for stores
 stores_bp = Blueprint('stores', __name__)
 
 # MongoDB connection
-client = pymongo.MongoClient("mongodb+srv://anasyakubu:W5Q8cL3sA6VHh9rh@cluster0.9ymzbqe.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = pymongo.MongoClient(MONGO_URI)
 db = client["store_db"]
 stores_collection = db["stores"]
 
