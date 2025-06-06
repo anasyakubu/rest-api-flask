@@ -1,5 +1,3 @@
----
-
 ```markdown
 # Flask REST API Deployment on Render
 
@@ -241,7 +239,7 @@ Enjoy deploying your Flask API! 🚀
 
 ---
 
-### Summary
+## Summary
 
 ✅ Covers:  
 ✅ Virtual environment setup  
