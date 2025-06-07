@@ -4,6 +4,7 @@ from bson import ObjectId
 import pymongo
 from dotenv import load_dotenv
 import os
+from services.vat import calculated_vat
 
 
 # Load variables from .env into environment
@@ -28,6 +29,9 @@ def get_stores():
         stores.append(store)
     return {'stores': stores}
 
+
+
+
 @stores_bp.get("/stores/<store_id>")
 def get_store(store_id):
     try:
@@ -39,18 +43,34 @@ def get_store(store_id):
             return jsonify({"error": "Store not found"}), 404
     except:
         return jsonify({"error": "Invalid ID"}), 400
+    
+
+
 
 @stores_bp.post("/stores")
 def create_store():
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided"}), 400
-    
+
+    # Make sure required fields are present
+    if "name" not in data or "items" not in data:
+        return jsonify({"error": "Missing required fields (name, location, items)"}), 400
+
+    # Calculate VAT for each item and add it to the item
+    for item in data["items"]:
+        price = item.get("price", 0)
+        item["vat"] = calculated_vat(price)
+
+    # Insert updated data into database
     result = stores_collection.insert_one(data)
+
     return jsonify({
         "message": "Store added successfully!",
         "store_id": str(result.inserted_id)
     }), 201
+
+
 
 @stores_bp.put("/stores/<store_id>")
 def update_store(store_id):
@@ -68,6 +88,9 @@ def update_store(store_id):
         return jsonify({"message": "Store updated successfully!"}), 200
     except:
         return jsonify({"error": "Invalid ID"}), 400
+    
+
+
 
 @stores_bp.delete("/stores/<store_id>")
 def delete_store(store_id):

@@ -20,6 +20,8 @@ client = pymongo.MongoClient(MONGO_URI)
 db = client["store_db"]
 users_collection = db["users"]
 
+
+
 @users_bp.post("/users")
 def create_user():
     data = request.get_json()
@@ -35,6 +37,9 @@ def create_user():
         "user_id": str(result.inserted_id)
     }), 201
 
+
+
+
 @users_bp.get("/users")
 def get_users():
     users = []
@@ -42,6 +47,8 @@ def get_users():
         user['_id'] = str(user['_id'])
         users.append(user)
     return jsonify({"users": users}), 200
+
+
 
 @users_bp.get("/users/<user_id>")
 def get_user(user_id):
@@ -54,6 +61,9 @@ def get_user(user_id):
             return jsonify({"error": "User not found"}), 404
     except:
         return jsonify({"error": "Invalid ID"}), 400
+    
+
+
 
 @users_bp.put("/users/<user_id>")
 def update_user(user_id):
@@ -71,6 +81,8 @@ def update_user(user_id):
         return jsonify({"message": "User updated successfully!"}), 200
     except:
         return jsonify({"error": "Invalid ID"}), 400
+    
+
 
 @users_bp.delete("/users/<user_id>")
 def delete_user(user_id):

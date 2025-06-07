@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask
 from stores import stores_bp
 from users import users_bp
