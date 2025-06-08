@@ -77,6 +77,7 @@ def login():
     }, JWT_SECRET, algorithm="HS256")
 
     return jsonify({"token": token}), 200
+    
 
 @users_bp.get("/users")
 @token_required
@@ -86,6 +87,9 @@ def get_users(current_user):
         user["_id"] = str(user["_id"])
         users.append(user)
     return jsonify({"users": users}), 200
+
+
+
 
 @users_bp.get("/users/<user_id>")
 @token_required
@@ -99,6 +103,8 @@ def get_user(current_user, user_id):
             return jsonify({"error": "User not found"}), 404
     except:
         return jsonify({"error": "Invalid ID"}), 400
+    
+
 
 @users_bp.put("/users/<user_id>")
 @token_required
