@@ -71,12 +71,15 @@ def login():
     if not user:
         return jsonify({"error": "Invalid credentials"}), 401
 
-    token = jwt.encode({
+    payload = {
         "user_id": str(user["_id"]),
         "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
-    }, JWT_SECRET, algorithm="HS256")
+    }
+
+    token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
     return jsonify({"token": token}), 200
+
     
 
 @users_bp.get("/users")
